@@ -58,10 +58,14 @@ const createOne = async (req, res) => {
         }
 
         const file = req.file;
-        if (!file) return res.status(400).send('No image in the request');
-        const fileName = file.filename;
-        const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`;
-        let product = new Product({ ...req.body, image: `${basePath}${fileName}` });
+        // if (!file) return res.status(400).send('No image in the request');
+        var image = ''
+        if(file){
+            const fileName = file.filename;
+            const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`;
+            image = `${basePath}${fileName}`;
+        }
+        let product = new Product({ ...req.body, image: image });
         product = await product.save();
         if (!product) {
             res.status(404).json({ success: false, 'message': 'product cannot be created' });

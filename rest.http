@@ -1,9 +1,9 @@
 GET http://localhost:3000/api/v1/category
 
-POST http://localhost:3000/api/v1/category
-content-type: application/json
+# POST http://localhost:3000/api/v1/category
+# content-type: application/json
 
-{
-    "name": "sample",
-    "color": "red"
-}
+# {
+#     "name": "sample",
+#     "color": "red"
+# }

@@ -53,7 +53,7 @@ const createOne = async (req, res) =>{
 
     const totalPrice = totalPrices.reduce((a,b)=>a+b, 0)
     try {
-        let order = new Order({...req.body, orderItems: orderItemsIdsResolved, totalPrice:totalPrice});
+        let order = new Order({...req.body, orderItems: orderItemsIdsResolved, totalPrice:totalPrice, user: req.body.user});
         order = await order.save();
         if(!order) {
             return res.status(404).json({success: false, "message":"Could not create an orders"})
