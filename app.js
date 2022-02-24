@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 require('dotenv').config({path:'./config/.env'});
 require('./src/db/mongoose');
+const serverless = require('serverless-http');
 const port = process.env.PORT || 3000;
 const api = process.env.API_URL;
 const cors = require('cors');
@@ -11,18 +12,19 @@ const userRouter = require('./src/routers/userRoute');
 const orderRouter = require('./src/routers/orderRoute');
 const authJwt = require('./src/helpers/jwt');
 const errorHandler = require('./src/helpers/error-handler');
+const router = express.Router();
 
 const morgan = require('morgan');
 
-app.use(cors());
-app.options('*',cors());
-app.use('/public/uploads', express.static(__dirname + '/public/uploads'));
+router.use(cors());
+router.options('*',cors());
+router.use('/public/uploads', express.static(__dirname + '/public/uploads'));
 
-app.use(express.json());
-app.use(morgan('tiny'));
-app.use(authJwt());
-// app.use(errorHandler());
-app.use(function errorHandler(err, req, res, next) {
+router.use(express.json());
+router.use(morgan('tiny'));
+router.use(authJwt());
+// router.use(errorHandler());
+router.use(function errorHandler(err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
         // jwt authentication error
         return res.status(401).json({message: "The user is not authorized"})
@@ -37,15 +39,17 @@ app.use(function errorHandler(err, req, res, next) {
     return res.status(500).json(err);
 })
 
-app.use(`${api}/category`, categoryRouter);
-app.use(`${api}/product`, productRouter);
-app.use(`${api}/users`, userRouter);
-app.use(`${api}/orders`, orderRouter);
+router.use(`${api}/category`, categoryRouter);
+router.use(`${api}/product`, productRouter);
+router.use(`${api}/users`, userRouter);
+router.use(`${api}/orders`, orderRouter);
 
-app.get(`${api}/`,(req,res)=>{
+router.get(`${api}/`,(req,res)=>{
     res.send("<h1>Hello World</h1>");
 });
 
-app.listen(port,()=>{
-    console.log(`server is running on port ${port}`);
-})
+console.log(`Server is running on port ${port}`);
+
+app.use(router);
+
+module.exports.handler = serverless(app);
