@@ -48,8 +48,8 @@ router.get(`${api}/`,(req,res)=>{
     res.send("<h1>Hello World</h1>");
 });
 
-console.log(`Server is running on port ${port}`);
-
 app.use(router);
 
-module.exports.handler = serverless(app);
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
