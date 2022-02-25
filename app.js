@@ -4,7 +4,7 @@ require('dotenv').config({path:'./config/.env'});
 require('./src/db/mongoose');
 const serverless = require('serverless-http');
 const port = process.env.PORT || 3000;
-const api = process.env.API_URL;
+const api = process.env.API_URL || '/api/v1';
 const cors = require('cors');
 const categoryRouter = require('./src/routers/categoryRoute');
 const productRouter = require('./src/routers/productRoute');
